@@ -1,31 +1,29 @@
 import numpy as np
-from tools.writing import wp_dump
-from tools.plotting import *
-from pushers.boris_sdc import boris_SDC
-from pushers.coll import coll
-# from pushers.rel_col18 import implicit_coll
-from pushers.gauss_legendre import CollGaussLegendre
-from pushers.gauss_lobatto import CollGaussLobatto
-
-from penning import config
-
+from rvv_io import *
+from rvv_functions import *
+from rvv_solution import *
+from rvv_pushers import *
+from rvv_fields import *
+from rel_col18 import implicit_coll
+from rel_sdc import *
+from gauss_legendre import CollGaussLegendre
+from gauss_lobatto import CollGaussLobatto
 
 sims = [10,20,40,80,160,320,640]
-tend = 10
+sims = [1]
+tend = 1
 
 M = 3
-K_range = [2]
+K_range = [1,2,3,4,5,6,7]
+K_range = [1]
 
-c = 10
+c = 29979
 q = 1
 label = "A"
 # gamma_max = 1.0000000000005
 gamma_max = 5.
 beta_max = np.sqrt(1-1./gamma_max**2.)
 uy_max = beta_max*c
-
-conf = config(q=q,c=c)
-
 new = True
 
 for K in K_range:
@@ -57,24 +55,24 @@ for K in K_range:
         v_array = [vel]
         t_array = [t]
 
-        col = coll(CollGaussLobatto,dt,nq,K=K,M=M,predictor=True)
+        col = coll(CollGaussLobatto,dt,nq,K=K,M=M,c=c,q=q,predictor=True)
         rx_array = [np.linalg.norm(col.Rx,axis=1)]
         rv_array = [np.linalg.norm(col.Rv,axis=1)]
 
         # Collocation solution stuff
-        # posc = np.copy(pos)
-        # velc = np.copy(vel)
-        # colc = coll(CollGaussLobatto,dt,nq,M=5,K=1,c=c,q=q)
+        posc = np.copy(pos)
+        velc = np.copy(vel)
+        colc = coll(CollGaussLobatto,dt,nq,M=5,K=1,c=c,q=q)
 
         for ti in range(1,Nt+1):
             t = ti*dt
 
-            pos, vel, col = boris_SDC(pos,vel,col,conf)
+            pos, vel, col = boris_SDC(pos,vel,col)
             # print(G(vel,c=c)/c*100)
             # posc, velc, colc = implicit_coll(posc,velc,colc)
             rx_array.append(np.linalg.norm(col.Rx,axis=1))
             rv_array.append(np.linalg.norm(col.Rv,axis=1))
-            # x2_array.append(posc)
+            x2_array.append(posc)
             x_array.append(pos)
             v_array.append(vel)
             t_array.append(t)
@@ -92,7 +90,7 @@ for K in K_range:
         rx_array = np.array(rx_array)
         rv_array = np.array(rv_array)
         x_array = np.array(x_array)
-        # x2_array = np.array(x2_array)
+        x2_array = np.array(x2_array)
         v_array = np.array(v_array)
         t_array = np.array(t_array)
 

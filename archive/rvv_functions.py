@@ -12,10 +12,6 @@ def gv(v,c=1):
 
     return gamma
 
-def vg(gamma,c=1):
-    v = np.sqrt(c**2 * (1-1/gamma**2))
-    return v
-
 def G(um,c=1):
     gamma = gu(um,c=c)
     vm = um/gamma[:,np.newaxis]
@@ -45,9 +41,3 @@ def Gdot5(um,fm):
     c = 1
     gdot = c**4 * gu(um)[:,np.newaxis] * fm / np.sum(np.power(c**2+um**2,2),axis=1)[:,np.newaxis]
     return gdot
-
-# u = 10.**5
-# g = gu(np.array([[u,0,0]]),c=1)
-# print(g)
-# print(u/g)
-# print(10.**5/100000.000005)

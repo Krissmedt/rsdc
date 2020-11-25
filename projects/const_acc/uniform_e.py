@@ -11,14 +11,17 @@ from gammafac import gu
 
 class config:
     def __init__(self,**kwargs):
-        self.c = 9.44911
-        self.q = 1
+        #elf.c = 299792458
+        self.c = 1.
+        self.q = 1.
         self.nq = 1
-        self.name = "C"
+        self.name = "acc"
         self.data_root = "./output/"
 
         self.x0 = np.zeros((self.nq,3),dtype=np.float)
         self.v0 = np.zeros((self.nq,3),dtype=np.float)
+
+        self.Ex = 1.
 
         ## Iterate through keyword arguments and store all in object (self)
         for key, value in kwargs.items():
@@ -28,17 +31,7 @@ class config:
     ###### Electric field call for pusher
     def E(self,t,x):
         E = np.zeros((x.shape[0],3),dtype=np.float)
-        nq = x.shape[0]
-        E_mat = np.array([[1,0,0],[0,1,0],[0,0,-2]])
-        E_mag = 1*(4.9**2 / self.q)
-        # E_mag = -0.1
-        for pii in range(0,nq):
-            E[pii,:] = np.dot(E_mat,x[pii,:]) * E_mag
-
-        #
-        #E[:,2] = -0.1
-        # E[:,2] = -0.1*x[:,2]
-        #E[:,2] = 0.
+        E[:,0] = self.Ex
 
         return E
 
@@ -46,9 +39,6 @@ class config:
     ###### Magnetic field call for pusher
     def B(self,t,x):
         B = np.zeros((x.shape[0],3),dtype=np.float)
-        B[:,2] = 1.
-
-        B = B * 25.0/self.q
         return B
 
 
@@ -57,12 +47,27 @@ class config:
         F = self.q/1 * (E + np.cross(vel/(gu(vel,c=self.c)[:,np.newaxis]),B))
         return F
 
-
+    ###### Particle initialisation for driver
     def prtcl_setup(self):
-        self.x0[0,:] = np.array([[10.,0.,0.]])
-        self.v0[0,:] = np.array([[100.,0.,100.]])
-
         x0 = cp.deepcopy(self.x0)
         v0 = cp.deepcopy(self.v0)
 
         return x0,v0
+
+    ###### Analytical relativistic factor
+    def gamma(self,t):
+        m = 1.
+        gamma = np.sqrt(1+(self.q*self.Ex*t)**2/(m*self.c)**2)
+        return gamma
+
+    ###### Analytical position
+    def ref_x(self,t):
+        m = 1.
+        x = m*self.c**2/(self.q*self.Ex) * (self.gamma(t)-1)
+        return x
+
+    ###### Analytical velocity
+    def ref_vx(self,t):
+        m = 1.
+        vx = self.q*self.Ex/m * t/self.gamma(t)
+        return vx

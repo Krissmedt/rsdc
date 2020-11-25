@@ -2,6 +2,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py as h5
 
+def data_dump(t,pos,vel,dt,filename,xres=0,vres=0,rhs=0):
+    try:
+        file = h5.File(filename,'w')
+    except OSError:
+        file.close()
+        file = h5.File(filename,'w')
+
+    grp = file.create_group('fields')
+    grp.create_dataset('Nt',data=pos.shape[0])
+    grp.create_dataset('rhs',data=rhs)
+    grp.create_dataset('dt',data=dt)
+    grp.create_dataset('pos',data=pos)
+    grp.create_dataset('vel',data=vel)
+    grp.create_dataset('t',data=t)
+    grp.create_dataset('x0',data=pos[0,:,:])
+    grp.create_dataset('u0',data=vel[0,:,:])
+    grp.create_dataset('xres',data=xres)
+    grp.create_dataset('vres',data=vres)
+    file.close()
+
+
 def wp_dump(t,pos,vel,dt,filename,rhs=0,new=False):
     if new == True:
         try:

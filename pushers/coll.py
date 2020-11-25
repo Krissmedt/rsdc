@@ -10,6 +10,7 @@ class coll:
 
         self.K = K
         self.M = M
+        self.tolerance=1e-14
 
         self.nodes = coll._getNodes
         self.weights = coll._getWeights(coll.tleft,coll.tright) #Get M  nodes and weights

@@ -13,14 +13,13 @@ def E(x,q=1):
     nq = x.shape[0]
     E_mat = np.array([[1,0,0],[0,1,0],[0,0,-2]])
     E_mag = 1*(4.9**2 / q)
-    # E_mag = -0.1
+    # E_mag = -1.
     for pii in range(0,nq):
         E[pii,:] = np.dot(E_mat,x[pii,:]) * E_mag
 
     #
-    #E[:,2] = -0.1
-    # E[:,2] = -0.1*x[:,2]
-    #E[:,2] = 0.
+    # E[:,2] = 0.1*x[:,2]
+
     return E
 
 def F(vel,E,B,q=1,c=1):

@@ -4,15 +4,21 @@ from rvv_functions import *
 from rvv_solution import *
 from rvv_pushers import *
 from rvv_fields import *
+from rel_col18 import *
+from gauss_legendre import CollGaussLegendre
+from gauss_lobatto import CollGaussLobatto
 
+sims = [1000]
+tend = 10
+M = 5
 
-sims = [10,20,40,80,160,320,640,1280]
-# sims = [1]
-tend = 1
-c = 29979
+#c = 299
+c = 441.726
 q = 1
+label = "A"
 
 gamma_max = 5.
+# gamma_max = 1.00000005
 beta_max = np.sqrt(1-1./gamma_max**2.)
 uy_max = beta_max*c
 
@@ -36,39 +42,40 @@ for Nt in sims:
     # lfreq = -q*np.linalg.norm(B(pos),axis=1)/(1*c*gamma)
     # larmor = vel[:,1]/gamma/lfreq
     # larmor = 1*vel[:,1]/(-q*np.linalg.norm(B(pos),axis=1))
+    # pos[:,0] = larmor
 
     t = 0
 
+    rx_array = [0]
+    rv_array = [0]
     x_array = [pos]
     v_array = [vel]
     t_array = [t]
 
+    col = coll(CollGaussLobatto,dt,nq,M=M,K=1,c=c,q=q)
     for ti in range(1,Nt+1):
         t = ti*dt
 
-        En = E(pos,q=q)
-        Bn = B(pos,q=q)
+        pos, vel, col = implicit_coll(pos,vel,col)
 
-        vhalf = vel+F(vel,En,Bn,q=q,c=c)*dt/2
-        pos = pos + G(vhalf,c=c)*dt
-
-        Eh = (E(pos,q=q) + En)/2
-        Bh = (B(pos,q=q) + Bn)/2
-
-        vel = boris(vel,Eh,Bh,dt,q=q,c=c)
-
-        x_array.append(pos)
-        v_array.append(vel)
+        rx_array.append(np.linalg.norm(col.Rx,axis=1))
+        rv_array.append(np.linalg.norm(col.Rv,axis=1))
+        x_array.append(np.copy(pos))
+        v_array.append(np.copy(vel))
         t_array.append(t)
 
+    rx_array = np.array(rx_array)
+    rv_array = np.array(rv_array)
     x_array = np.array(x_array)
     v_array = np.array(v_array)
     t_array = np.array(t_array)
 
     rhs = Nt
-    wp_dump(t_array,x_array,v_array,dt,"vvA_wp_vvrel.h5",rhs=rhs,new=new)
+    wp_dump(t_array,x_array,v_array,dt,"coll_wp_{0}.h5".format(label),rhs=rhs,new=new)
     new = False
 
-plot_traj(x_array,"vvA_"+str(Nt),label="sim")
-plot_isotraj(x_array,"vvA_"+str(Nt),plim=1,label="sim")
-plot_vel(t_array,v_array,"vvA_"+str(Nt),label="sim")
+plot_isotraj(x_array,"coll_"+str(Nt),plim=1,label="sim")
+plot_traj(x_array,"coll_"+str(Nt),label="sim")
+plot_vel(t_array,v_array,"coll_"+str(Nt),label="sim")
+# plot_xres(t_array,rx_array,"coll"+str(Nt))
+# plot_vres(t_array,rv_array,"coll"+str(Nt))
