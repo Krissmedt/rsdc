@@ -76,9 +76,6 @@ for key,value in filenames.items():
         g[ts,:] = gu(u[ts,:,:])
         x_sol[ts,0,:] = conf.ref_pos(t[ts])
 
-    print(key)
-    print(np.linalg.norm(u,axis=2))
-
     ref_errors = np.abs(x[:,0,:]-x_sol[:,0,:])
     ref_errors = np.linalg.norm(ref_errors,axis=1)
 
@@ -111,7 +108,7 @@ for key,value in filenames.items():
         c = (r,0,b,am4)
         am4 -= 1/sims
     if "Boris-SDC M5" in key:
-        sims = 2
+        sims = 3
         c = (0,gr,0,am5)
         am5 -= 1/sims
 
@@ -132,7 +129,7 @@ for key,value in filenames.items():
     ax_vel.plot(t/Tc,refu_errors,color=c,label=label)
     ax_vel.set_ylabel(r'$\Delta v^{\mathrm{rel}}$')
     ax_vel.set_yscale('log')
-    ax_vel.set_ylim(10**(-16),10**(-10))
+    ax_vel.set_ylim(10**(-16),10**(-7))
     ax_vel.set_xlabel(r'$t/T_c$')
     ax_vel.set_xlim(0,100)
 

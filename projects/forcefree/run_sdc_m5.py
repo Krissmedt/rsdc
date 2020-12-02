@@ -12,15 +12,16 @@ from pushers.gauss_lobatto import CollGaussLobatto
 from forcefree import config
 conf = config()
 
-tend = 1
-dt = 0.001
+tend = 10**5
+dt = 0.01
 Nt = np.int(tend/dt)
-samples = 1
+samples = 1000
+
 
 plot = False
 
 M = 5
-K_range = [4]
+K_range = [1,4]
 
 sample_interval = math.floor(Nt/samples)
 
@@ -67,7 +68,9 @@ for K in K_range:
     else:
         rhs = (M-1)*K*Nt
 
-    filename = "{0}sdc_M{1}K{2}_{3}_te{4}_nt{5}".format(conf.data_root,M,K,conf.name,tend,Nt)
+    tend_str = np.int(np.log10(tend))
+    nt_str = np.int(Nt/tend)
+    filename = "{0}sdc_M{1}K{2}_{3}_te{4}_nt{5}".format(conf.data_root,M,K,conf.name,tend_str,nt_str)
     data_dump(t_array,x_array,v_array,dt,
               filename+".h5",xres=rx_array,vres=rv_array,rhs=rhs)
 

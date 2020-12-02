@@ -15,7 +15,7 @@ sims = [10,20,40,80,160,320,640]
 tend = 10
 
 M = 5
-K_range = [4,5,6]
+K_range = [4]
 
 conf = config()
 
@@ -33,7 +33,7 @@ for K in K_range:
         v_array = [vel]
         t_array = [t]
 
-        col = coll(CollGaussLobatto,dt,conf.nq,K=K,M=M,predictor=True)
+        col = coll(CollGaussLobatto,dt,conf.nq,K=K,M=M,predictor=False)
         rx_array = [np.linalg.norm(col.Rx,axis=1)]
         rv_array = [np.linalg.norm(col.Rv,axis=1)]
 

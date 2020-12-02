@@ -28,72 +28,34 @@ def boris_SDC(pos,vel,coll,conf,t=0):
     coll.u[0,:,:] = vel
     coll.F[0,:,:] = F(vel,E(t,pos),B(t,pos))
 
-    coll.xn[0,:,:] = coll.x[0,:,:]
-    coll.un[0,:,:] = coll.u[0,:,:]
-    coll.Fn[0,:,:] = coll.F[0,:,:]
+    for m in range(1,M+1):
+        coll.x[m,:,:] = coll.x[0,:,:]
+        coll.u[m,:,:] = coll.u[0,:,:]
+        coll.F[m,:,:] = coll.F[0,:,:]
+
+    for m in range(0,2):
+        coll.xn[m,:,:] = coll.x[0,:,:]
+        coll.un[m,:,:] = coll.u[0,:,:]
+        coll.Fn[m,:,:] = coll.F[0,:,:]
 
     coll.IV = 0
     coll.IF = 0
 
+    predictor = simple_predict
+    if coll.predictor == True:
+        predictor = verlet_predict
+
     ###### Initial Step #########################
-    v_half = vel + 0.5*dm[0]*F(vel,E(t,pos),B(t,pos))
-    coll.x[1,:,:] = pos + dm[0]*G(v_half,c=c)
-
-    En         = 0.5*(E(t,pos) + E(t,coll.x[1,:,:]))*qe
-    Bn         = B(t,coll.x[1,:,:])*qe
-    gamma      = gu(coll.u[0,:,:],c=c)
-    c_1        = 0.5*dm[0]*np.cross(G(coll.u[0,:,:],c=c), B(t,coll.x[0,:,:]))*qe
-    c_2        = -(0.5*dm[0]/gamma)*np.cross(coll.u[0,:,:], Bn) + c_1
-    coll.u[1,:,:] = boris_trick(coll.u[0,:,:],En,Bn,dm[0],gamma,ck=c_2,q=qe)
-    coll.F[1,:,:] = F(coll.u[0,:,:],E(t,coll.x[0,:,:]),B(t,coll.x[0,:,:]))
-
-    if coll.predictor == False:
-        coll.x[1,:,:] = coll.x[0,:,:]
-        coll.u[1,:,:] = coll.u[0,:,:]
-        coll.F[1,:,:] = coll.F[0,:,:]
+    coll.x, coll.u, coll.F = predictor(0,coll.x,coll.u,coll.F,coll,conf)
 
     ############################################
     ######## Predictor Step ####################
     for m in range(1,M):
-        v_half = coll.u[m,:,:] + 0.5*dm[m]*coll.F[m,:,:]
-        coll.x[m+1,:,:] = coll.x[m,:,:] + dm[m]*G(v_half,c=c)
-
-        En         = 0.5*(E(t,coll.x[m,:,:]) + E(t,coll.x[m+1,:,:]))*qe
-        Bn         = B(t,coll.x[m,:,:])*qe
-        gamma      = gu(coll.u[m,:,:],c=c)
-        c_1        = 0.5*dm[m]*np.cross(G(coll.u[m,:,:],c=c), B(t,coll.x[m,:,:]))*qe
-        c_2        = -(0.5*dm[m]/gamma)*np.cross(coll.u[m,:,:], Bn) + c_1
-        coll.u[m+1,:,:] = boris_trick(coll.u[m,:,:],En,Bn,dm[m],gamma,ck=c_2,q=qe)
-        coll.F[m+1,:,:] = F(coll.u[m+1,:,:],E(t,coll.x[m+1,:,:]),B(t,coll.x[m+1,:,:]))
-
-        if coll.predictor == False:
-            coll.x[m+1,:,:] = coll.x[m,:,:]
-            coll.u[m+1,:,:] = coll.u[m,:,:]
-            coll.F[m+1,:,:] = coll.F[m,:,:]
+        coll.x, coll.u, coll.F = predictor(m,coll.x,coll.u,coll.F,coll,conf)
 
     coll.calc_residual_2018(0,c=c)
 
     for k in range(1,K+1):
-        coll.IV = 0
-        coll.IF = 0
-
-        coll.xn[1,:,:] = coll.x[0,:,:] + coll.IV
-
-        En         = 0.5*(E(t,coll.x[0,:,:]) + E(t,coll.xn[1,:,:]))*qe
-        Bn         = B(t,coll.xn[1,:,:])*qe
-        gamma      = gu(coll.u[1,:,:],c=c)
-        c_1        = 0.5*dm[0]*np.cross(G(coll.u[0,:,:],c=c), B(t,coll.x[0,:,:]))*qe
-        c_1       += -0.5*dm[0]* (coll.F[0,:,:] + coll.F[1,:,:])
-        c_1       += coll.IF
-        c_2        = -(0.5*dm[0]/gamma)*np.cross(coll.u[0,:,:], Bn)
-        coll.un[1,:,:] = boris_trick(coll.u[0,:,:],En,Bn,dm[0],gamma,ck=c_2,q=qe)
-        coll.Fn[1,:,:] = F(coll.un[1,:,:],E(t,coll.xn[1,:,:]),B(t,coll.xn[1,:,:]))
-
-        if coll.predictor == False:
-            coll.xn[1,:,:] = coll.x[1,:,:]
-            coll.un[1,:,:] = coll.u[1,:,:]
-            coll.Fn[1,:,:] = coll.F[1,:,:]
-
         for m in range(coll.ssi,M):
             # Calculate collocation terms required for pos update
             coll.IV = 0
@@ -133,3 +95,32 @@ def boris_SDC(pos,vel,coll,conf,t=0):
     vel = np.copy(coll.un[m+1,:,:])
 
     return pos, vel, coll
+
+
+def simple_predict(m,xarr,uarr,Farr,coll,conf,t=0):
+    # Dummy method for predictors
+    # default is to simply let the arrays be populated by initial conditions
+
+    return xarr,uarr,Farr
+
+
+def verlet_predict(m,xarr,uarr,Farr,coll,conf,t=0):
+    E = conf.E
+    B = conf.B
+    F = conf.F
+    c = conf.c
+    q = conf.q
+    dm = coll.delta_m
+
+    v_half = uarr[m,:,:] + 0.5*dm[m]*Farr[m,:,:]
+    xarr[m+1,:,:] = xarr[m,:,:] + dm[m]*G(v_half,c=c)
+
+    En         = 0.5*(E(t,xarr[m,:,:]) + E(t,xarr[m+1,:,:]))*q
+    Bn         = B(t,xarr[m,:,:])*q
+    gamma      = gu(uarr[m,:,:],c=c)
+    c_1        = 0.5*dm[m]*np.cross(G(uarr[m,:,:],c=c), B(t,xarr[m,:,:]))*q
+    c_2        = -(0.5*dm[m]/gamma)*np.cross(uarr[m,:,:], Bn) + c_1
+    uarr[m+1,:,:] = boris_trick(uarr[m,:,:],En,Bn,dm[m],gamma,ck=c_2,q=q)
+    Farr[m+1,:,:] = F(uarr[m+1,:,:],E(t,xarr[m+1,:,:]),B(t,xarr[m+1,:,:]))
+
+    return xarr,uarr,Farr

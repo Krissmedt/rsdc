@@ -17,11 +17,12 @@ class config:
         self.m = 1.
         self.nq = 1
         self.name = "forcefree"
-        self.data_root = "./output/"
+        self.data_root = "./output/te100000/"
 
         self.Bz = 1.
         self.gamma = 10.**6
         self.vy = -vg(self.gamma,c=self.c)
+
         self.Ex = -self.vy*self.Bz
 
         self.x0 = np.zeros((self.nq,3),dtype=np.float)

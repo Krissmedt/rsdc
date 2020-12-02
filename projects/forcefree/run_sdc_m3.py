@@ -9,19 +9,18 @@ from pushers.coll import coll
 from pushers.gauss_legendre import CollGaussLegendre
 from pushers.gauss_lobatto import CollGaussLobatto
 
-from gyro import config
+from forcefree import config
 conf = config()
 
-tend = 2*conf.ref_period()
-dt = conf.ref_period()/100
-# tend = dt
+tend = 10**5
+dt = 0.25
 Nt = np.int(tend/dt)
-samples = Nt
+samples = 1000
 
-plot = True
+plot = False
 
-M = 5
-K_range = [4]
+M = 3
+K_range = [2]
 
 sample_interval = math.floor(Nt/samples)
 
@@ -68,9 +67,11 @@ for K in K_range:
     else:
         rhs = (M-1)*K*Nt
 
-    filename = "{0}sdc_M{1}K{2}_{3}".format(conf.data_root,M,K,conf.name)
+    tend_str = np.int(np.log10(tend))
+    nt_str = np.int(Nt/tend)
+    filename = "{0}sdc_M{1}K{2}_{3}_te{4}_nt{5}".format(conf.data_root,M,K,conf.name,tend_str,nt_str)
     data_dump(t_array,x_array,v_array,dt,
-              filename+"_full.h5",xres=rx_array,vres=rv_array,rhs=rhs)
+              filename+".h5",xres=rx_array,vres=rv_array,rhs=rhs)
 
     if plot == True:
         plot_xres(t_array,rx_array,filename)

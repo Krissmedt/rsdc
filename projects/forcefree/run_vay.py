@@ -8,10 +8,10 @@ from pushers.vay import vay
 from forcefree import config
 conf = config()
 
-tend = 100
-dt = 0.001
+tend = 10**5
+dt = 0.01
 Nt = np.int(tend/dt)
-samples = 100
+samples = 1000
 
 plot = False
 
@@ -47,7 +47,9 @@ x_array = np.array(x_array)
 v_array = np.array(v_array)
 t_array = np.array(t_array)
 
-filename = "{0}vay_{1}_te{2}_nt{3}".format(conf.data_root,conf.name,tend,Nt)
+tend_str = np.int(np.log10(tend))
+nt_str = np.int(Nt/tend)
+filename = "{0}vay_{1}_te{2}_nt{3}".format(conf.data_root,conf.name,tend_str,nt_str)
 data_dump(t_array,x_array,v_array,dt,filename+".h5")
 
 if plot == True:

@@ -45,9 +45,3 @@ def Gdot5(um,fm):
     c = 1
     gdot = c**4 * gu(um)[:,np.newaxis] * fm / np.sum(np.power(c**2+um**2,2),axis=1)[:,np.newaxis]
     return gdot
-
-# u = 10.**5
-# g = gu(np.array([[u,0,0]]),c=1)
-# print(g)
-# print(u/g)
-# print(10.**5/100000.000005)

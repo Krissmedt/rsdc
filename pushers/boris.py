@@ -28,13 +28,10 @@ def boris_classic(u,E,B,dt,ck=0,q=-1,c=1):
 
     um = u + dt/2 * (q*E/1 + ck)
     g = gu(um,c=c)[:,np.newaxis]
-
     t = q*dt*B/(2*g*1)
-
     ud = um + np.cross(um,t)
-
     up = um + np.cross(ud,2*t/(1+np.linalg.norm(t**2,axis=1)[:,np.newaxis]))
-    # up = um + np.cross(ud,2*t/(1+t*t))
+
     vel = up + dt/2 * (q*E/1 + ck)
 
     return vel
@@ -50,8 +47,8 @@ def boris_trick(u,E,B,dt,gamma,ck=0,q=-1):
     u_min = u + 0.5*dt*q*E + 0.5*ck
     u_star  = u_min + np.cross(u_min, t)
     u_plus  = u_min + np.cross(u_star, s)
-
-    return u_plus + 0.5*dt*q*E + 0.5*ck
+    un = u_plus + 0.5*dt*q*E + 0.5*ck
+    return un
 
 
 
