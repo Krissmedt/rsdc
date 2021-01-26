@@ -1,5 +1,5 @@
 import numpy as np
-from tools.writing import wp_dump
+from tools.writing import wp_dump, data_dump
 from tools.plotting import *
 from pushers.boris_sdc import boris_SDC
 from pushers.coll import coll
@@ -11,7 +11,7 @@ from penning import config
 
 
 sims = [10,20,40,80,160,320,640]
-# sims = [1]
+sims = [640]
 tend = 10
 
 M = 5
@@ -19,7 +19,7 @@ K_range = [4]
 
 conf = config()
 
-plot = False
+plot = True
 new = True
 
 for K in K_range:
@@ -64,6 +64,7 @@ for K in K_range:
         new = False
 
         if plot == True:
+            data_dump(t_array,x_array,v_array,dt,filename+"_{0}.h5".format(Nt))
             plot_xres(t_array,rx_array,filename+"_xres")
             plot_vres(t_array,rv_array,filename+"_vres")
             plot_isotraj(x_array,filename+"_isotraj")

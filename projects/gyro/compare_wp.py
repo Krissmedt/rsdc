@@ -39,14 +39,14 @@ filenames["Boris-SDC M5K5"] = "sdc_M5K5_{0}_wp.h5".format(testcase)
 filenames["Boris-SDC M5K6"] = "sdc_M5K5_{0}_wp.h5".format(testcase)
 
 plot_params = {}
-plot_params['legend.fontsize'] = 16
+plot_params['legend.fontsize'] = 22
 plot_params['figure.figsize'] = (12,8)
-plot_params['axes.labelsize'] = 20
-plot_params['axes.titlesize'] = 20
-plot_params['xtick.labelsize'] = 16
-plot_params['ytick.labelsize'] = 16
+plot_params['axes.labelsize'] = 24
+plot_params['axes.titlesize'] = 24
+plot_params['xtick.labelsize'] = 24
+plot_params['ytick.labelsize'] = 24
 plot_params['lines.linewidth'] = 4
-plot_params['axes.titlepad'] = 5
+plot_params['axes.titlepad'] = 10
 plot_params['legend.loc'] = 'upper right'
 plt.rcParams.update(plot_params)
 r = 1

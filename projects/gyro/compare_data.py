@@ -28,7 +28,7 @@ testcase = "gyro"
 filenames = {}
 
 # filenames["Leapfrog"] = "lf_{0}_full.h5".format(testcase)
-filenames["Velocity-Verlet B"] = "vvb_{0}_full.h5".format(testcase)
+filenames["Velocity-Verlet"] = "vvb_{0}_full.h5".format(testcase)
 filenames["Vay"] = "vay_{0}_full.h5".format(testcase)
 # filenames["HC"] = "hc_{0}_full.h5".format(testcase)
 filenames["Collocation M5"] = "coll_M5_{0}_full.h5".format(testcase)
@@ -39,14 +39,14 @@ filenames["Boris-SDC M5K5"] = "sdc_M5K5_{0}_full.h5".format(testcase)
 filenames["Boris-SDC M5K6"] = "sdc_M5K6_{0}_full.h5".format(testcase)
 
 plot_params = {}
-plot_params['legend.fontsize'] = 16
+plot_params['legend.fontsize'] = 22
 plot_params['figure.figsize'] = (12,8)
-plot_params['axes.labelsize'] = 20
-plot_params['axes.titlesize'] = 20
-plot_params['xtick.labelsize'] = 16
-plot_params['ytick.labelsize'] = 16
+plot_params['axes.labelsize'] = 24
+plot_params['axes.titlesize'] = 24
+plot_params['xtick.labelsize'] = 24
+plot_params['ytick.labelsize'] = 24
 plot_params['lines.linewidth'] = 4
-plot_params['axes.titlepad'] = 5
+plot_params['axes.titlepad'] = 10
 plot_params['legend.loc'] = 'upper right'
 plt.rcParams.update(plot_params)
 r = 1
@@ -85,7 +85,7 @@ for key,value in filenames.items():
     refg_errors = np.abs(g-gamma_sol)/np.abs(gamma_sol)
     refg_errors = np.linalg.norm(refg_errors,axis=1)
 
-    if "Velocity-Verlet B" in key:
+    if "Velocity-Verlet" in key:
         c = "black"
     if key == "Leapfrog":
         c = "black"

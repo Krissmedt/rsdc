@@ -44,5 +44,6 @@ for Nt in sims:
     new = False
 
     if plot == True:
+        data_dump(t_array,x_array,v_array,dt,filename+"_{0}.h5".format(Nt))
         plot_isotraj(x_array,filename+"_isotraj")
         plot_vel(t_array,v_array,filename+"_traj")

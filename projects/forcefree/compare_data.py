@@ -29,14 +29,14 @@ Nt = 10
 
 filenames = {}
 
-filenames["Velocity-Verlet B"] = "vvb_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
+filenames["Velocity-Verlet"] = "vvb_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
 filenames["Vay"] = "vay_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
-# filenames["Collocation M3"] = "coll_M3_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
-# filenames["Collocation M5"] = "coll_M5_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
+filenames["Collocation M3"] = "coll_M3_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
+filenames["Collocation M5"] = "coll_M5_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
 filenames["Boris-SDC M3K1"] = "sdc_M3K1_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
 filenames["Boris-SDC M3K2"] = "sdc_M3K2_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
 filenames["Boris-SDC M5K1"] = "sdc_M5K1_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
-# filenames["Boris-SDC M5K4"] = "sdc_M5K4_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
+filenames["Boris-SDC M5K4"] = "sdc_M5K4_{0}_te{1}_nt{2}.h5".format(testcase,tend,Nt)
 
 
 plot_params = {}
@@ -78,7 +78,7 @@ for key,value in filenames.items():
     refg_errors = np.abs(g-g0)/np.abs(g0)
     refg_errors = np.linalg.norm(refg_errors,axis=1)
 
-    if "Velocity-Verlet B" in key:
+    if "Velocity-Verlet" in key:
         c = "black"
     if key == "Leapfrog":
         c = "black"

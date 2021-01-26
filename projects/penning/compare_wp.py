@@ -17,40 +17,39 @@ warnings.filterwarnings("ignore")
 from tools.writing import *
 from tools.plotting import *
 
-data_root = "./output/"
-fig_name = "C"
-testcase = "C"
+data_root = "./output_old/"
+fig_name = "D"
+testcase = "D"
 
 filenames = {}
 
-filenames["Ref"] = "coll_M5_{0}_wp.h5".format(testcase)
-filenames["Leapfrog"] = "lf_{0}_wp.h5".format(testcase)
+filenames["Ref"] = "coll_wp_{0}.h5".format(testcase)
+# filenames["Leapfrog"] = "lf_{0}_wp.h5".format(testcase)
 # filenames["Velocity-Verlet A"] = "vva_{0}_wp.h5".format(testcase)
-filenames["Velocity-Verlet B"] = "vvb_{0}_wp.h5".format(testcase)
-filenames["Vay"] = "vay_{0}_wp.h5".format(testcase)
-filenames["HC"] = "hc_{0}_wp.h5".format(testcase)
+filenames["Velocity-Verlet"] = "vvA_wp_{0}.h5".format(testcase)
+# filenames["Vay"] = "vay_{0}_wp.h5".format(testcase)
+# filenames["HC"] = "hc_{0}_wp.h5".format(testcase)
 # filenames["Velocity-Verlet C"] = "vvc_{0}_wp.h5".format(testcase)
-# filenames["Boris-SDC M3K1"] = "sdc_M3K1_wp_{0}.h5".format(testcase)
-filenames["Boris-SDC M3K2"] = "sdc_M3K2_{0}_wp.h5".format(testcase)
-# filenames["Boris-SDC M5K1"] = "sdc_M5K1_wp_{0}.h5".format(testcase)
+filenames["Boris-SDC M3K1"] = "sdc_M3K1_wp_{0}.h5".format(testcase)
+filenames["Boris-SDC M3K2"] = "sdc_M3K2_wp_{0}.h5".format(testcase)
+filenames["Boris-SDC M5K1"] = "sdc_M5K1_wp_{0}.h5".format(testcase)
 # filenames["Boris-SDC M5K2"] = "sdc_M5K2_wp_{0}.h5".format(testcase)
-# filenames["Boris-SDC M5K3"] = "sdc_M5K3_wp_{0}.h5".format(testcase)
-filenames["Boris-SDC M5K4"] = "sdc_M5K4_{0}_wp.h5".format(testcase)
-# filenames["Boris-SDC M5K5"] = "sdc_M5K5_wp_{0}.h5".format(testcase)
+filenames["Boris-SDC M5K3"] = "sdc_M5K3_wp_{0}.h5".format(testcase)
+# filenames["Boris-SDC M5K4"] = "sdc_M5K4_wp_{0}.h5".format(testcase)
+filenames["Boris-SDC M5K5"] = "sdc_M5K5_wp_{0}.h5".format(testcase)
 # filenames["Boris-SDC M5K6"] = "sdc_M5K6_wp_{0}.h5".format(testcase)
-# filenames["Boris-SDC M5K7"] = "sdc_M5K7_wp_{0}.h5".format(testcase)
-# filenames["Boris-SDC M5K5"] = "sdc_M5K5_wp_vvrel.h5"
+filenames["Boris-SDC M5K7"] = "sdc_M5K7_wp_{0}.h5".format(testcase)
 
 
 plot_params = {}
-plot_params['legend.fontsize'] = 16
+plot_params['legend.fontsize'] = 22
 plot_params['figure.figsize'] = (12,8)
-plot_params['axes.labelsize'] = 20
-plot_params['axes.titlesize'] = 20
-plot_params['xtick.labelsize'] = 16
-plot_params['ytick.labelsize'] = 16
+plot_params['axes.labelsize'] = 24
+plot_params['axes.titlesize'] = 24
+plot_params['xtick.labelsize'] = 24
+plot_params['ytick.labelsize'] = 24
 plot_params['lines.linewidth'] = 4
-plot_params['axes.titlepad'] = 5
+plot_params['axes.titlepad'] = 10
 plot_params['legend.loc'] = 'upper right'
 plt.rcParams.update(plot_params)
 r = 1
@@ -95,7 +94,7 @@ for key,value in filenames.items():
     print(rhs)
 
 
-    if key == "Velocity-Verlet B":
+    if key == "Velocity-Verlet":
         c = "black"
     if key == "Leapfrog":
         c = "green"

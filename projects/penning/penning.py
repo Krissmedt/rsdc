@@ -11,10 +11,10 @@ from gammafac import gu
 
 class config:
     def __init__(self,**kwargs):
-        self.c = 9.44911
+        self.c = 126.491
         self.q = 1
         self.nq = 1
-        self.name = "C"
+        self.name = "B"
         self.data_root = "./output/"
 
         self.x0 = np.zeros((self.nq,3),dtype=np.float)
